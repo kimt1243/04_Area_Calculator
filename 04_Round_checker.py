@@ -27,7 +27,7 @@ def round_checker():
 
 
 rounds_played = 0
-choose_instruction = "Please "
+choose_instruction = "Please type a whole number bigger and equal to 1"
 
 # Ask user for # of rounds, <enter> for infinite mode
 rounds = round_checker()
@@ -50,8 +50,11 @@ while end_game == "no":
     if choose == "xxx":
         break
     # rest of loop / game
-    print("You chose{}".format(choose))
+    print("You chose {}".format(choose))
 
     rounds_played += 1
 
-print("Thank you for playing")
+# End game if number of rounds < number of rounds played
+    if rounds_played == rounds:
+        print("Thank you for playing")
+        break
