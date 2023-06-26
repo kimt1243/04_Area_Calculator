@@ -1,22 +1,50 @@
-Welcome to Area perimeter calcuator
+# Functions go here...
+Formula_list = ["square", "triangle", "circle"]
 
-Instructions
-(with yes or no checker)
+def formula_checker(question):
+    while True:
+        # Ask user for choice
+        response = input(question).lower()
 
-Diffuculty
-(Easy, medium and high)
-(easy contains finding area of squre and rectangles)
-Medium contains finding area of triangles and other shapes before
-(Hard is circles)
+        # iterates through list and if response is an item
+        # in the list (or the first letter of an item),
+        # the full item is returned
 
-Round mechanic
-(infinity included)
+        for item in Formula_list:
+            if response == item[0] or response == item:
+                return item
 
-Question
-(3 guesses)
+        else:
+            print()
+            print("please type a valid formula (square, triangle, circle)")
+            print()
 
-If questions is not answer and guesses is > 1
-show correct answer and round loss + 1
+# Main Routine goes here...
+formula_ask = formula_checker("Which formula would you like to know? ")
 
-when round = 0
-Game stats ask user if they want to play again
+if formula_ask == "square":
+    try:
+        print()
+        print("The formula for finding the area of a square is: {area = height * width}")
+        print()
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+if formula_ask == "triangle":
+    try:
+        print()
+        print("The formula for finding the area of a triangle is: {area = height * base * 0.5}")
+        print()
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+if formula_ask == "circle":
+    try:
+        print()
+        print("The formula for finding the area of a circle is: {area = PI * radius ^ 2}")
+        print()
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+
+
