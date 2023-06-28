@@ -42,15 +42,19 @@ def formula_checker(question):
 # Check if user wants to see the instructions
 played_before = yes_no_checker("Would you like to see the instructions? ")
 
-if played_before == "yes":
-    instructions()
-
 if played_before == "xxx":
     print("You have chosen 'xxx'. Thank you for playing!")
     exit()  # Use exit() to end the program
 
+if played_before == "yes":
+    instructions()
+
 # Check if user wants to see the formula list
 formula_check = yes_no_checker("Would you like to see the formula list? ")
+
+if formula_check == "xxx":
+    print("You have chosen 'xxx'. Thank you for playing!")
+    exit()  # Use exit() to end the program
 
 if formula_check == "yes":
     print()

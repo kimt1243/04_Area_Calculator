@@ -1,4 +1,6 @@
 # Functions go here...
+import math
+import random
 Formula_list = ["square", "triangle", "circle"]
 yesno_list = ["yes", "no"]
 
@@ -107,8 +109,54 @@ def round_checker():
                 continue
 
         return response
+def int_check(question, exit_code=None):
+    while True:
+        response = input(question).lower()
 
+        if response == exit_code:
+            break
 
+        try:
+            return int(response)
+
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
+def Question_gen():
+    if diff_ask == "easy":
+        height = random.randint(1, 10)
+        width = random.randint(1, 10)
+        area = height * width
+        print("If the height of the square is {} and the width is {}, find the area.".format(height, width))
+        user_answer = int_check("Your answer: ")
+        if user_answer == area:
+            print("Correct!")
+        else:
+            print("Incorrect. The correct answer is", area)
+
+    if diff_ask == "medium":
+        base = random.randint(1, 10)
+        height = random.randint(1, 10)
+        area = 0.5 * base * height
+        print("Find the area of a triangle if the base is {} and the height is {}.".format(base, height))
+        user_answer = int_check("Your answer: ")
+        if user_answer == area:
+            print("Correct!")
+        else:
+            print("Incorrect. The correct answer is", area)
+
+    if diff_ask == "hard":
+        radius = random.randint(1, 10)
+        area = math.pi * radius ** 2
+        print("Find the area of a circle if the radius is {}.".format(radius))
+        user_answer = int_check("Your answer: ")
+        if user_answer == area:
+            print("Correct!")
+        else:
+            print("Incorrect. The correct answer is", area)
+            
+# Main routine goes here
+diff_ask = difficulty_checker("Which difficulty would you like to play? ")
 played_before = yes_no_checker("Would you like to see the instructions? ")
 
 if played_before == "yes":
@@ -124,21 +172,6 @@ if formula_check == "yes":
     print()
     print()
     print("The formula for finding the area of a circle is: {area = PI * radius ^ 2}")
-    print()
-
-diff_ask = difficulty_checker("Which difficulty would you like to play? ")
-
-if diff_ask == "easy":
-    print()
-    print("you have chosen easy")
-    print()
-if diff_ask == "medium":
-    print()
-    print("you have chosen medium")
-    print()
-if diff_ask == "hard":
-    print()
-    print("you have chosen hard")
     print()
 
 

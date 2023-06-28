@@ -6,6 +6,7 @@ def formula_checker():
                          "(or 'xxx' to exit): ").lower()
 
         if response == 'xxx':
+            print("Thank you for playing")
             break
 
         shape = response[0]  # Get the first letter of the shape
