@@ -37,5 +37,6 @@ if diff_ask == "hard":
 if diff_ask == "xxx":
     print()
     print("You have chosen 'xxx', Thank you for playing!")
+    exit()
 
 

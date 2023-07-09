@@ -1,14 +1,13 @@
-# Functions go here...
-import math
 import random
-Formula_list = ["square", "triangle", "circle"]
-yesno_list = ["yes", "no"]
+import math
 
-# Functions go here
+# List goes here
+Formula_list = ["square", "triangle", "circle", "xxx"]
+yesno_list = ["yes", "no", "xxx"]
+questiondiff_list = ["easy", "medium", "hard", "xxx"]
 
 
 def yes_no_checker(question):
-
     while True:
         # Ask user for choice
         response = input(question).lower()
@@ -26,22 +25,19 @@ def yes_no_checker(question):
 
 def instructions():
     print()
-    print("**** Area Calculator Game ****")
+    print("***********************")
+    print("**** INSTRUCTIONS *****")
+    print("***********************")
     print()
-    print("For each game you will be asked to...")
+    print("For each game, you will be asked to:")
     print()
-    print("-Choose a difficulty for your math question "
-          "\n   Easy mode contains squares and rectangles. "
-          "You will only be asked to find the area. "
-          "\n   Medium mode contains triangles, squares and rectangles. "
-          "You wil also be asked to find the height, width of the shape "
-          "\n   Hard mode contains circles, triangles, squares and rectangles. "
-          "You wil also be asked to find the height, width of the shape")
-
-    print("-Enter the number of rounds (enter for infinite rounds) that you want to play.")
-    print("-The user will be given 3 guesses to answer the question. ")
-
-    print("-Can you ")
+    print("- Choose a difficulty for your math question.")
+    print("  - Easy mode contains squares. ")
+    print("  - Medium mode contains triangles. ")
+    print("  - Hard mode contains circles. ")
+    print()
+    print("- Enter the number of rounds (or press enter for infinite rounds) that you want to play.")
+    print("- Can you guess the correct area?")
     print()
     return ""
 
@@ -61,17 +57,11 @@ def formula_checker(question):
 
         else:
             print()
-            print("please type a valid formula (square, triangle, circle)")
+            print("Please type a valid formula (square, triangle, circle)")
             print()
 
 
-questiondiff_list = ["easy", "medium", "hard"]
-
-# Functions go here
-
-
 def difficulty_checker(question):
-
     while True:
         # Ask user for choice
         response = input(question).lower()
@@ -85,15 +75,15 @@ def difficulty_checker(question):
                 return item
         else:
             print()
-            print("please type a valid difficulty (easy, medium, hard)")
+            print("Please type a valid difficulty (easy, medium, hard)")
             print()
 
 
 def round_checker():
     while True:
-        response = input("How many rounds would you like to play (enter for infinite rounds) : ")
+        response = input("How many rounds would you like to play (press enter for infinite rounds): ")
 
-        response_error = ("Please type either <enter> or and integer "
+        response_error = ("Please type either <enter> or an integer "
                           "that is a whole number and more than 0")
 
         if response != "":
@@ -109,12 +99,14 @@ def round_checker():
                 continue
 
         return response
+
+
 def int_check(question, exit_code=None):
     while True:
         response = input(question).lower()
 
         if response == exit_code:
-            break
+            return None
 
         try:
             return int(response)
@@ -122,88 +114,151 @@ def int_check(question, exit_code=None):
         except ValueError:
             print("Invalid input. Please enter an integer.")
 
-def Question_gen():
+
+def question_gen(diff_ask):
     if diff_ask == "easy":
         height = random.randint(1, 10)
         width = random.randint(1, 10)
         area = height * width
         print("If the height of the square is {} and the width is {}, find the area.".format(height, width))
-        user_answer = int_check("Your answer: ")
+        user_answer = int_check("Your answer: ", exit_code="xxx")
+
+        if user_answer is None:
+            return "exit"
+
         if user_answer == area:
-            print("Correct!")
+            print("Correct! You calculated the area correctly.")
+            return "win"
         else:
             print("Incorrect. The correct answer is", area)
+            return "lose"
 
-    if diff_ask == "medium":
+    elif diff_ask == "medium":
         base = random.randint(1, 10)
         height = random.randint(1, 10)
         area = 0.5 * base * height
         print("Find the area of a triangle if the base is {} and the height is {}.".format(base, height))
-        user_answer = int_check("Your answer: ")
+        user_answer = int_check("Your answer: ", exit_code="xxx")
+
+        if user_answer is None:
+            return "exit"
+
         if user_answer == area:
-            print("Correct!")
+            print("Correct! You calculated the area correctly.")
+            return "win"
         else:
             print("Incorrect. The correct answer is", area)
+            return "lose"
 
-    if diff_ask == "hard":
+    elif diff_ask == "hard":
         radius = random.randint(1, 10)
         area = math.pi * radius ** 2
         print("Find the area of a circle if the radius is {}.".format(radius))
-        user_answer = int_check("Your answer: ")
+        user_answer = int_check("Your answer: ", exit_code="xxx")
+
+        if user_answer is None:
+            return "exit"
+
         if user_answer == area:
-            print("Correct!")
+            print("Correct! You calculated the area correctly.")
+            return "win"
         else:
             print("Incorrect. The correct answer is", area)
-            
+            return "lose"
+
+
 # Main routine goes here
-diff_ask = difficulty_checker("Which difficulty would you like to play? ")
-played_before = yes_no_checker("Would you like to see the instructions? ")
-
-if played_before == "yes":
-    instructions()
-formula_check = yes_no_checker("Would you like to see the formula list? ")
-
-if formula_check == "yes":
-    print()
-    print("The formula for finding the area of a square is: {area = height * width}")
-    print()
-    print()
-    print("The formula for finding the area of a triangle is: {area = height * base * 0.5}")
-    print()
-    print()
-    print("The formula for finding the area of a circle is: {area = PI * radius ^ 2}")
+def play_game():
+    print("====================================")
+    print("Welcome to the Area Calculator Game!")
+    print("====================================")
     print()
 
-
-rounds_played = 0
-choose_instruction = "Please type a whole number bigger or equal to 1"
-
-# Ask user for # of rounds, <enter> for infinite mode
-rounds = round_checker()
-
-end_game = "no"
-while end_game == "no":
-
-    # Rounds Heading
+    played_before = yes_no_checker("Would you like to see the instructions? ")
     print()
-    if rounds == "":
-        heading = "Continuous Mode: Round {}".format(rounds_played + 1)
 
-    else:
-        heading = "Round {} of {}".format(rounds_played + 1, rounds)
+    if played_before == "yes":
+        instructions()
 
-    print(heading)
-    choose = input("{} or 'xxx' to end: ".format(choose_instruction))
+    if played_before == "xxx":
+        print()
+        print("You have chosen 'xxx'. Thank you for playing!")
+        return
 
-    # End game if exit code is typed
-    if choose == "xxx":
-        break
-    # rest of loop / game
-    print("You chose {}".format(choose))
+    formula_check = yes_no_checker("Would you like to see the formula list? ")
+    print()
 
-    rounds_played += 1
+    if formula_check == "yes":
+        print("The formula for finding the area of a SQUARE is: area = height * width")
+        print("The formula for finding the area of a TRIANGLE is: area = 0.5 * base * height")
+        print("The formula for finding the area of a CIRCLE is: area = PI * radius^2")
+        print()
 
-# End game if number of rounds < number of rounds played
-    if rounds_played == rounds:
-        print("Thank you for playing")
-        break
+    if formula_check == "xxx":
+        print("You have chosen 'xxx'. Thank you for playing!")
+        return
+
+    diff_ask = difficulty_checker("Which difficulty would you like to play? ")
+
+    if diff_ask == "xxx":
+        print()
+        print("You have chosen 'xxx'. Thank you for playing!")
+        return "exit"
+
+    print("------------------------------------")
+    print("You have chosen the {} difficulty!".format(diff_ask))
+    print("------------------------------------")
+
+    rounds_played = 0
+
+    # Ask user for # of rounds, <enter> for infinite mode
+    rounds = round_checker()
+
+    if rounds == "xxx":
+        print()
+        print("You have chosen 'xxx'. Thank you for playing!")
+        return
+
+    game_summary = {"win": 0, "lose": 0}
+
+    while True:
+        # Rounds Heading
+        print()
+        if rounds == "":
+            heading = "Continuous Mode: Round {}".format(rounds_played + 1)
+        else:
+            heading = "Round {} of {}".format(rounds_played + 1, rounds)
+
+        print(heading)
+
+        result = question_gen(diff_ask)
+
+        if result == "exit":
+            print()
+            print("You have chosen 'xxx'. Thank you for playing!")
+            break
+
+
+        if result == "win":
+            game_summary["win"] += 1
+        else:
+            game_summary["lose"] += 1
+
+        rounds_played += 1
+
+        # End game if number of rounds < number of rounds played
+        if rounds_played == rounds:
+            break
+
+    print()
+    print("***** Game Summary *****")
+    print("Total Rounds Played:", rounds_played)
+    print("Wins:", game_summary["win"])
+    print("Losses:", game_summary["lose"])
+    print()
+
+    print("Thank you for playing the Area Calculator Game!")
+    print()
+
+
+play_game()
