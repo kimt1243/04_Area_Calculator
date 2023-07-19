@@ -59,16 +59,41 @@ def round_checker():
                 continue
         return response
 
+# int/float checker, used for components consisting of checking integers
+def intfloat_checker(question, exit_code=None, allow_floats="yes"):
 
-def int_check(question, exit_code=None):
     while True:
-        response = input(question).lower()
+        response = input(question)
+
         if response == exit_code:
             return None
-        try:
-            return int(response)
-        except ValueError:
-            print("Invalid input. Please enter an integer.")
+
+        elif response != "":
+            try:
+                if allow_floats == "yes":
+                    response = float(response)
+
+                    # When implemented into base, no sides (which the user has to find) will be less than 1
+                    if response < 1:
+                        print("Please input a valid NUMBER (> 1)\n")
+                        continue
+
+                elif allow_floats == "no":
+                    response = int(response)
+
+                    if response < 1:
+                        print("Please input a valid integer (> 0)\n")
+                        continue
+
+            except ValueError:
+                print("<ValueError> That is an invalid INTEGER / NUMBER\n")
+                continue
+
+        return response
+
+
+
+
 
 
 def question_gen(diff_ask):
@@ -77,7 +102,7 @@ def question_gen(diff_ask):
         width = random.randint(1, 10)
         area = height * width
         print("If the height of the square is {} and the width is {}, find the area.".format(height, width))
-        user_answer = int_check("Your answer: ", exit_code="xxx")
+        user_answer = intfloat_checker("Your answer: ", exit_code="xxx", allow_floats="no")
         if user_answer is None:
             return "exit"
         if user_answer == area:
@@ -91,7 +116,7 @@ def question_gen(diff_ask):
         height = random.randint(1, 10)
         area = 0.5 * base * height
         print("Find the area of a triangle if the base is {} and the height is {}.".format(base, height))
-        user_answer = int_check("Your answer: ", exit_code="xxx")
+        user_answer = intfloat_checker("Your answer: ", exit_code="xxx", allow_floats="no")
         if user_answer is None:
             return "exit"
         if user_answer == area:
@@ -104,7 +129,7 @@ def question_gen(diff_ask):
         radius = random.randint(1, 10)
         area = 3.14 * radius ** 2
         print("Find the area of a circle if the radius is {}, (PI is set as 3.14).".format(radius))
-        user_answer = int_check("Your answer: ", exit_code="xxx")
+        user_answer = intfloat_checker("Your answer: ", exit_code="xxx", allow_floats="yes")
         if user_answer is None:
             return "exit"
         if user_answer == area:
