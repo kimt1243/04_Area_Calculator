@@ -1,5 +1,4 @@
 import random
-import math
 
 # List goes here
 Formula_list = ["square", "triangle", "circle", "xxx"]
@@ -152,7 +151,7 @@ def question_gen(diff_ask):
 
     elif diff_ask == "hard":
         radius = random.randint(1, 10)
-        area = math.pi * radius ** 2
+        area = 3.14 * radius ** 2
         print("Find the area of a circle if the radius is {}.".format(radius))
         user_answer = int_check("Your answer: ", exit_code="xxx")
 
@@ -168,6 +167,12 @@ def question_gen(diff_ask):
 
 
 # Main routine goes here
+
+# Available Lists
+game_summary = []
+round_win = 0
+round_lose = 0
+
 def play_game():
     print("====================================")
     print("Welcome to the Area Calculator Game!")
@@ -192,6 +197,7 @@ def play_game():
         print("The formula for finding the area of a SQUARE is: area = height * width")
         print("The formula for finding the area of a TRIANGLE is: area = 0.5 * base * height")
         print("The formula for finding the area of a CIRCLE is: area = PI * radius^2")
+        print("PI is set as *3.14* in this game")
         print()
 
     if formula_check == "xxx":
@@ -209,18 +215,9 @@ def play_game():
     print("You have chosen the {} difficulty!".format(diff_ask))
     print("------------------------------------")
 
-    rounds_played = 0
-
-    # Ask user for # of rounds, <enter> for infinite mode
     rounds = round_checker()
-
-    if rounds == "xxx":
-        print()
-        print("You have chosen 'xxx'. Thank you for playing!")
-        return
-
-    game_summary = {"win": 0, "lose": 0}
-
+    rounds_played = 0
+    # Ask user for # of rounds, <enter> for infinite mode
     while True:
         # Rounds Heading
         print()
@@ -232,17 +229,16 @@ def play_game():
         print(heading)
 
         result = question_gen(diff_ask)
-
+        # End game when user has entered the exit code
         if result == "exit":
             print()
             print("You have chosen 'xxx'. Thank you for playing!")
             break
-
-
+        # If result is either win or lose, add it to the counter
         if result == "win":
-            game_summary["win"] += 1
+            round_win += 1
         else:
-            game_summary["lose"] += 1
+            round_lose += 1
 
         rounds_played += 1
 
@@ -250,15 +246,25 @@ def play_game():
         if rounds_played == rounds:
             break
 
-    print()
-    print("***** Game Summary *****")
-    print("Total Rounds Played:", rounds_played)
-    print("Wins:", game_summary["win"])
-    print("Losses:", game_summary["lose"])
-    print()
+# Ask user if they want to see their game history.
+# Calculate Game Stats
+rounds_win = rounds_played - rounds_lost - rounds_drawn
 
-    print("Thank you for playing the Area Calculator Game!")
-    print()
+percent_win = rounds_won / rounds_played * 100
+percent_lose = rounds_lost / rounds_played * 100
+percent_draw = rounds_drawn / rounds_played * 100
 
+print()
+print("----- Game History -----")
+for game in game_summary:
+    print(game)
+
+print()
+
+# displays game stats with % values to the nearest whole number
+print("===== Game Statistics =====")
+print("Win: {}, ({:.0f}%) \nLoss: {}, "
+      "({:.0f}%) \nTie: {}, ({:.0f}%)".format(rounds_won, percent_win, rounds_lost, percent_lose,
+                                              rounds_drawn, percent_draw))
 
 play_game()
