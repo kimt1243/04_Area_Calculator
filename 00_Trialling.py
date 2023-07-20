@@ -31,7 +31,7 @@ def instructions():
     print("- Can you guess the correct area?")
     print()
 
-
+# Function that checks that the difficulty the user entered is a valid difficulty.
 def difficulty_checker(question):
     while True:
         response = input(question).lower()
@@ -43,7 +43,7 @@ def difficulty_checker(question):
             print("Please type a valid difficulty (easy, medium, hard)")
             print()
 
-
+# Round checker that makes sure the user
 def round_checker():
     while True:
         response = input("How many rounds would you like to play (press enter for infinite rounds): ")
@@ -58,6 +58,7 @@ def round_checker():
                 print(response_error)
                 continue
         return response
+
 
 # int/float checker, used for components consisting of checking integers
 def intfloat_checker(question, exit_code=None, allow_floats="yes"):
@@ -91,11 +92,7 @@ def intfloat_checker(question, exit_code=None, allow_floats="yes"):
 
         return response
 
-
-
-
-
-
+# Question generator that is based on the difficulty the user chose.
 def question_gen(diff_ask):
     if diff_ask == "easy":
         height = random.randint(1, 10)
@@ -139,7 +136,7 @@ def question_gen(diff_ask):
             print("Incorrect. The correct answer is", area)
             return "lose"
 
-
+# Main Function
 def play_game():
     round_win = 0
     round_lose = 0
@@ -212,4 +209,4 @@ print()
 # Displays game stats with % values to the nearest whole number
 print("===== Game Statistics =====")
 print("Rounds Played: {}".format(rounds_played))
-print("Win: {}, ({:.0f}%) \nLoss: {}, ({:.0f}%)".format(round_win, percent_win, round_lose, percent_lose))
+print("Win: {}, ({:.0f}%) \nLose: {}, ({:.0f}%)".format(round_win, percent_win, round_lose, percent_lose))
