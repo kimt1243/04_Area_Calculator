@@ -24,13 +24,13 @@ def instructions():
     print()
     print("For each game, you will be asked to:")
     print()
-    print("- Choose a difficulty for your math question.")
-    print("  - Easy mode contains squares.")
-    print("  - Medium mode contains triangles.")
-    print("  - Hard mode contains circles.")
+    print("+ Choose a difficulty for your math question.")
+    print("  = Easy mode contains squares.")
+    print("  = Medium mode contains triangles.")
+    print("  = Hard mode contains circles.")
     print()
     print("- Enter the number of rounds (or press enter for infinite rounds) that you want to play.")
-    print("Can you guess the correct area?")
+    print("*Can you guess the correct area?*")
     print()
 
 
@@ -143,6 +143,7 @@ def question_gen(diff_ask):
 
 # Main Function
 def play_game():
+
     round_win = 0
     round_lose = 0
 
@@ -164,8 +165,9 @@ def play_game():
         print("The formula for finding the area of a SQUARE is: area = height * width")
         print("The formula for finding the area of a TRIANGLE is: area = 0.5 * base * height")
         print("The formula for finding the area of a CIRCLE is: area = PI * radius^2")
+        print("================================")
         print("PI is set as *3.14* in this game")
-        print()
+        print("================================")
     if formula_check == "xxx":
         print("You have chosen 'xxx'. Thank you for playing!")
         return
@@ -184,12 +186,12 @@ def play_game():
         if rounds == "":
             heading = "Continuous Mode: Round {}".format(rounds_played + 1)
         else:
-            heading = "Round {} of {}".format(rounds_played + 1, rounds)
+            heading = "!Round {} of {}!".format(rounds_played + 1, rounds)
         print(heading)
         result = question_gen(diff_ask)
         if result == "exit":
             print()
-            print("You have chosen 'xxx'. Thank you for playing!")
+            print("#You have chosen 'xxx'. Thank you for playing!#")
             break
         if result == "win":
             round_win += 1
