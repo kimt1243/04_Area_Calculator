@@ -1,6 +1,6 @@
 import random
-yesno_list = ["yes", "no", "xxx"]
-questiondiff_list = ["easy", "medium", "hard", "xxx"]
+yesno_list = ["yes", "no",]
+questiondiff_list = ["easy", "medium", "hard"]
 
 
 # Function that checks if the response is in the yesno_list

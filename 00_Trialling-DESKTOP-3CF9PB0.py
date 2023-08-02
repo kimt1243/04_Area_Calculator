@@ -2,7 +2,7 @@ import random
 
 
 # User input function - uses one function to get the users input for the difficulty and for the instructions
-def yes_no_difficulty_checker(question, search_list, error):
+def valid_checker(question, search_list, error):
     while True:
         response = input(question).lower()
 
@@ -58,42 +58,26 @@ def display_formula_instructions():
     print()
 
 
-# Round checker that makes sure the user enters a valid number of rounds
-
-# Input checker function
-def input_checker(question, is_integer=False, allow_empty=True, min_value=None):
+# number checker that checks if the user input is a valid
+def input_checker(question, allow_floats="no"):
     while True:
         response = input(question)
-        if response == "" and not allow_empty:
-            print("Please enter a value.")
-            continue
-        if is_integer:
+
+        # returns continuous mode
+        if response == '' and allow_floats == "no":
+            return response
+
+        elif response == 'xxx':
+            return None
+        elif response != "":
             try:
-                response = int(response)
+                response = float(response) if allow_floats == "yes" else int(response)
+                if response < 1:
+                    print("Please input a valid number greater than or equal to 1\n")
+                else:
+                    return response
             except ValueError:
-                print("Please enter a valid integer.")
-                continue
-        else:
-            try:
-                response = float(response)
-            except ValueError:
-                print("Please enter a valid number.")
-                continue
-
-        if min_value is not None and response < min_value:
-            print(f"Please enter a number greater than or equal to {min_value}.")
-            continue
-
-        return response
-
-# Round checker that makes sure the user enters a valid number of rounds
-def round_checker():
-    return input_checker("How many QUESTIONS would you like to play? (press enter for Continuous mode): ",
-                         is_integer=True, allow_empty=True, min_value=1)
-
-# int/float checker, used for components consisting of checking integers
-def intfloat_checker(question, exit_code=None, allow_floats=True):
-    return input_checker(question, is_integer=not allow_floats, allow_empty=exit_code is None, min_value=1)
+                print("<Error> That is an invalid integer / number!\n")
 
 
 # Question generator that is based on the difficulty the user chose.
@@ -103,6 +87,8 @@ def question_gen(diff_ask):
     width = random.randint(1, 10)
     base = random.randint(1, 10)
     radius = random.randint(1, 10)
+
+    area = ''
 
     if diff_ask == "easy":
         area = height * width
@@ -114,12 +100,12 @@ def question_gen(diff_ask):
         area = 3.14 * radius ** 2
         print(f"Find the area of a circle if the radius is {radius}, (PI is set as 3.14).")
 
-    user_answer = intfloat_checker("Your answer: ", exit_code="xxx", allow_floats="no")
+    user_answer = input_checker("Your answer: ", allow_floats="no")
     if user_answer is None:
         return "exit", None
 
     if user_answer == area:
-        print("Correct! You calculated the area correctly!.")
+        print("Correct! You calculated the area correctly!")
         return "correct", area
     else:
         print("Incorrect. The correct answer is", area)
@@ -127,12 +113,10 @@ def question_gen(diff_ask):
 
 
 # Main Function
-# Available lists
-yes_no_checker = {"yes", "no", "xxx"}
-difficulty_checker = {"easy", "medium", "hard", "xxx"}
+def main():
+    yes_no_list_checker = {"yes", "no", "xxx"}
+    difficulty_checker = {"easy", "medium", "hard", "xxx"}
 
-
-def play_game():
     round_correct = 0
     round_wrong = 0
 
@@ -142,8 +126,8 @@ def play_game():
     print()
 
     # Ask if the player wants to see the instructions
-    played_before = yes_no_difficulty_checker("Would you like to see the instructions? ", yes_no_checker,
-                                              "Please enter either yes or no (or 'xxx' to exit)")
+    played_before = valid_checker("Would you like to see the instructions? ", yes_no_list_checker,
+                                  "Please type either yes or no ('xxx' to exit)")
     if played_before == "yes":
         instructions()
     elif played_before == "xxx":
@@ -151,7 +135,8 @@ def play_game():
         return "exit"
 
     # Ask if the player wants to see the formula list
-    formula_check = yes_no_checker("Would you like to see the formula list? ")
+    formula_check = valid_checker("Would you like to see the formula list? ", yes_no_list_checker,
+                                  "Please type a either yes or no ('xxx' to exit)")
     if formula_check == "yes":
         display_formula_instructions()
     elif formula_check == "xxx":
@@ -159,8 +144,8 @@ def play_game():
         return "exit"
 
     # Ask the player to choose the difficulty level
-    diff_ask = yes_no_difficulty_checker("Which difficulty would you like to play? ", difficulty_checker,
-                                         "Please enter a valid difficulty (easy, medium, hard")
+    diff_ask = valid_checker("Which difficulty would you like to play? ", difficulty_checker,
+                             "Please type a valid difficulty (easy, medium, hard)")
     if diff_ask == "xxx":
         print("You have chosen 'xxx'. Thank you for playing!")
         return "exit"
@@ -170,7 +155,10 @@ def play_game():
     print("------------------------------------")
 
     # Ask the player how many rounds they want to play
-    rounds = round_checker()
+    rounds = input_checker('How many ROUNDS would you like to play? <enter> for continuous mode: ')
+    if rounds is None:  # if user presses enter
+        print('Thanks for playing! ')
+        exit()
     rounds_played = 0
 
     while True:
@@ -204,22 +192,29 @@ def play_game():
     return round_correct, round_wrong
 
 
-# Call the play_game() function and capture the returned values
-game_stats = play_game()
+# Call the main() function and capture the returned values
+game_stats = main()
+stats_round_correct = 0
+stats_round_wrong = 0
 
 # Check if the return value is "exit" (when 'xxx' is typed during instructions or difficulty selection)
 if game_stats == "exit":
     print("Thank you for playing!")
 else:
-    round_correct, round_wrong = game_stats
+    stats_round_correct, stats_round_wrong = game_stats
 
     # Calculate Game Stats
-    rounds_played = round_correct + round_wrong
-    percent_correct = round_correct / rounds_played * 100
-    percent_wrong = round_wrong / rounds_played * 100
+    stats_rounds_played = stats_round_correct + stats_round_wrong
+
+    if stats_rounds_played == 0:
+        percent_correct = 0.0
+        percent_wrong = 0.0
+    else:
+        percent_correct = stats_round_correct / stats_rounds_played * 100
+        percent_wrong = stats_round_wrong / stats_rounds_played * 100
 
     # Displays game stats with % values to the nearest whole number
     print("\n===== Game Statistics =====")
-    print(f"QUESTIONS Played: {rounds_played}")
-    print(f"RIGHT!: {round_correct}, ({percent_correct:.0f}%)")
-    print(f"WRONG...: {round_wrong}, ({percent_wrong:.0f}%)")
+    print(f"QUESTIONS Played: {stats_rounds_played}")
+    print(f"RIGHT!: {stats_round_correct}, ({percent_correct:.0f}%)")
+    print(f"WRONG...: {stats_round_wrong}, ({percent_wrong:.0f}%)")
