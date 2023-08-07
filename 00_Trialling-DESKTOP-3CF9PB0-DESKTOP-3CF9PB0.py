@@ -93,14 +93,16 @@ def question_gen(diff_ask):
     if diff_ask == "easy":
         area = height * width
         print(f"If the height of the square is {height} and the width is {width}, find the area.")
+        user_answer = input_checker("Your answer: ", allow_floats="no")
     elif diff_ask == "medium":
         area = 0.5 * base * height
         print(f"Imagine the area of a triangle if the base is {base} and the height is {height}.")
+        user_answer = input_checker("Your answer: ", allow_floats="yes")
     elif diff_ask == "hard":
         area = 3.14 * radius ** 2
         print(f"Find the area of a circle if the radius is {radius}, (PI is set as 3.14).")
+        user_answer = input_checker("Your answer: ", allow_floats="yes")
 
-    user_answer = input_checker("Your answer: ", allow_floats="no")
     if user_answer is None:
         return "exit", None
 
@@ -114,11 +116,12 @@ def question_gen(diff_ask):
 
 # Main Function
 def main():
+    # Available Lists
     yes_no_list_checker = {"yes", "no", "xxx"}
     difficulty_checker = {"easy", "medium", "hard", "xxx"}
-
-    round_correct = 0
-    round_wrong = 0
+    questions_played = 0
+    question_correct = 0
+    question_wrong = 0
 
     print("====================================")
     print("Welcome to the Area Calculator Quiz!")
@@ -128,6 +131,7 @@ def main():
     # Ask if the player wants to see the instructions
     played_before = valid_checker("Would you like to see the instructions? ", yes_no_list_checker,
                                   "Please type either yes or no ('xxx' to exit)")
+    print()
     if played_before == "yes":
         instructions()
     elif played_before == "xxx":
@@ -137,6 +141,7 @@ def main():
     # Ask if the player wants to see the formula list
     formula_check = valid_checker("Would you like to see the formula list? ", yes_no_list_checker,
                                   "Please type a either yes or no ('xxx' to exit)")
+    print()
     if formula_check == "yes":
         display_formula_instructions()
     elif formula_check == "xxx":
@@ -146,6 +151,7 @@ def main():
     # Ask the player to choose the difficulty level
     diff_ask = valid_checker("Which difficulty would you like to play? ", difficulty_checker,
                              "Please type a valid difficulty (easy, medium, hard)")
+    print()
     if diff_ask == "xxx":
         print("You have chosen 'xxx'. Thank you for playing!")
         return "exit"
@@ -153,26 +159,27 @@ def main():
     print("-----------------------------------")
     print(f"You have chosen the {diff_ask} difficulty!")
     print("------------------------------------")
+    print()
 
-    # Ask the player how many rounds they want to play
-    rounds = input_checker('How many ROUNDS would you like to play? <enter> for continuous mode: ')
-    if rounds is None:  # if user presses enter
+    # Ask the player how many questions they want to play
+    questions = input_checker('How many QUESTIONS would you like to play? <enter> for continuous mode: ')
+
+    if questions is None:
         print('Thanks for playing! ')
         exit()
-    rounds_played = 0
 
     while True:
         print()
-        if rounds == "":
-            heading = f"Continuous Mode: QUESTION {rounds_played + 1}"
+        if questions == "":
+            heading = f"Continuous Mode: QUESTION {questions_played + 1}"
         else:
-            heading = f"!QUESTION {rounds_played + 1} of {rounds}!"
+            heading = f"!QUESTION {questions_played + 1} of {questions}!"
         print(heading)
 
         result, area = question_gen(diff_ask)
 
         # End game if exit code is typed
-        if result == "exit" and rounds_played > 0:
+        if result == "exit" and questions_played > 0:
             print("\nYou have chosen to exit the Quiz. Thank you for playing!\n")
             break
         elif result == "exit":
@@ -180,36 +187,41 @@ def main():
             continue
 
         if result == "correct":
-            round_correct += 1
+            question_correct += 1
         else:
-            round_wrong += 1
+            question_wrong += 1
 
-        rounds_played += 1
+        questions_played += 1
 
-        if rounds_played == rounds:
+        if questions_played == questions:
             break
 
-    return round_correct, round_wrong
+    return question_correct, question_wrong
 
 
 # Call the main() function and capture the returned values
 game_stats = main()
-stats_round_correct = 0
-stats_round_wrong = 0
+stats_question_correct = 0
+stats_question_wrong = 0
 
 # Check if the return value is "exit" (when 'xxx' is typed during instructions or difficulty selection)
 if game_stats == "exit":
     print("Thank you for playing!")
 else:
-    game_stats = stats_round_correct, stats_round_wrong
+    stats_question_correct, stats_question_wrong = game_stats
 
     # Calculate Game Stats
-    stats_rounds_played = stats_round_correct + stats_round_wrong
-    percent_correct = stats_round_correct / stats_rounds_played * 100
-    percent_wrong = stats_round_wrong / stats_rounds_played * 100
+    stats_question_played = stats_question_correct + stats_question_wrong
+
+    if stats_question_played == 0:
+        percent_correct = 0.0
+        percent_wrong = 0.0
+    else:
+        percent_correct = stats_question_correct / stats_question_played * 100
+        percent_wrong = stats_question_wrong / stats_question_played * 100
 
     # Displays game stats with % values to the nearest whole number
     print("\n===== Game Statistics =====")
-    print(f"QUESTIONS Played: {stats_rounds_played}")
-    print(f"RIGHT!: {stats_round_correct}, ({percent_correct:.0f}%)")
-    print(f"WRONG...: {stats_round_wrong}, ({percent_wrong:.0f}%)")
+    print(f"QUESTIONS Played: {stats_question_played}")
+    print(f"RIGHT!: {stats_question_correct}, ({percent_correct:.0f}%)")
+    print(f"WRONG...: {stats_question_wrong}, ({percent_wrong:.0f}%)")
