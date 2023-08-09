@@ -1,204 +1,235 @@
 import random
-yesno_list = ["yes", "no",]
-questiondiff_list = ["easy", "medium", "hard"]
-
-
-# Function that checks if the response is in the yesno_list
-def yes_no_checker(question):
-    while True:
-        response = input(question).lower()
-        for item in yesno_list:
-            if response == item[0] or response == item:
-                return item
-        else:
-            print("Please type either yes or no")
 
 
 # Displays Instructions
 def instructions():
     print()
-    print("***********************")
-    print("**** INSTRUCTIONS *****")
-    print("***********************")
+    print("===========================================================================================")
+    print("                                       INSTRUCTIONS                                        ")
+    print("===========================================================================================")
     print()
-    print("For each QUESTION, you will be asked to:")
+    print("                            For each quiz, you will be asked to:                           ")
     print()
-    print("+ Choose a difficulty for your math question.")
-    print("  = Easy mode contains square/rectangles.")
-    print("  = Medium mode contains triangles.")
-    print("  = Hard mode contains circles.")
+    print("                        Choose a difficulty for your math question.                        ")
+    print("                                Easy mode contains squares.                                ")
+    print("                              Medium mode contains triangles.                              ")
+    print("                                Hard mode contains circles.                                ")
     print()
-    print("- Enter the number of questions (or press enter for infinite rounds) that you want to play.")
-    print("*Can you guess the correct area?*")
+    print("  Enter the number of questions (or press enter for infinite rounds) that you want to play.")
+    print()
+    print("===========================================================================================")
+    print("                             Can you guess the correct area?                               ")
+    print("===========================================================================================")
     print()
 
 
-# Function that checks that the difficulty the user entered is a valid difficulty.
-def difficulty_checker(question):
+# Displays formula instructions
+def display_formula_instructions():
+    print()
+    print("===============================================================================")
+    print("                                     FORMULA                                   ")
+    print("===============================================================================")
+    print()
+    print("|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|")
+    print("|    The formula for finding the area of a SQUARE is: area = height * width   |")
+    print("|-----------------------------------------------------------------------------|")
+    print("|The formula for finding the area of a TRIANGLE is: area = 0.5 * base * height|")
+    print("|-----------------------------------------------------------------------------|")
+    print("|   The formula for finding the area of a CIRCLE is: area = PI * radius^2     |")
+    print("|^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^|")
+    print()
+    print("===============================================================================")
+    print("                       PI is set as *3.14* in this game                        ")
+    print("===============================================================================")
+    print()
+
+
+# User input function - uses one function to get the users input for the difficulty and for the instructions
+def valid_checker(question, search_list, error):
     while True:
         response = input(question).lower()
-        for item in questiondiff_list:
+
+        # Searches and checks the list (depending on the question) for valid responses, otherwise prints an error
+        for item in search_list:
             if response == item[0] or response == item:
                 return item
-        else:
-            print()
-            print("Please type a valid difficulty (easy, medium, hard)")
-            print()
+        # Prints error code if the user answer is not a valid answer.
+        print(error)
+        print()
 
 
-# Question checker that makes sure the user enters a valid round
-def question_checker():
-    while True:
-        response = input("How many QUESTIONS would you like to play (press enter for infinite Question): ")
-        response_error = "Please type either <enter> or an integer that is a whole number and more than 0"
-        if response != "":
-            try:
-                response = int(response)
-                if response < 1:
-                    print(response_error)
-                    continue
-            except ValueError:
-                print(response_error)
-                continue
-        return response
-
-
-# int/float checker, used for components consisting of checking integers
-def intfloat_checker(question, exit_code=None, allow_floats="yes"):
-
+# input checker, used for components consisting of checking integers
+def input_checker(question, allow_floats=False):
     while True:
         response = input(question)
 
-        if response == exit_code:
-            return None
-
+        # returns continuous mode
+        if response == '' and allow_floats is False:
+            return response
+        # returns exit code
+        elif response == 'xxx':
+            return 'xxx'
+        
         elif response != "":
             try:
-                if allow_floats == "yes":
+                if allow_floats is True:
                     response = float(response)
-
-                elif allow_floats == "no":
+                elif allow_floats is False:
                     response = int(response)
-
                 if response < 1:
-                    print("Please input a valid Number over '1' \n")
-                    continue
-
+                    print("Please input a valid number greater than or equal to 1\n")
+                else:
+                    return response
             except ValueError:
-                print("<Error> That is an invalid Integer / Number!\n")
-                continue
-
-        return response
+                print("<Error> That is an invalid integer / number!\n")
 
 
 # Question generator that is based on the difficulty the user chose.
-def question_gen(diff_ask):
-    while diff_ask not in questiondiff_list:
-        print("Invalid difficulty level. Please choose from: easy, medium, or hard.")
-        diff_ask = input("Enter the difficulty: ").lower()
+def question_gen(difficulty):
+    # Available variables that will be used for the areas.
+    height = random.randint(1, 10)
+    width = random.randint(1, 10)
+    base = random.randint(1, 10)
+    radius = random.randint(1, 10)
 
-    if diff_ask == "easy":
-        height = random.randint(1, 10)
-        width = random.randint(1, 10)
+    question = ''
+
+    area = ''
+
+    # If the difficulty is "easy", output a square/rectangle question.
+    if difficulty == "easy":
         area = height * width
-        print("If the height of the square/rectangle is {} and the width is {}, find the area.".format(height, width))
+        question = f"If the height of the square/rectangle is {height} and the width is {width}, find the area: "
 
-    elif diff_ask == "medium":
-        height = random.randint(1, 10)
-        base = random.randint(1, 10)
+    # If the difficulty is "medium", output a triangle question.
+    elif difficulty == "medium":
         area = 0.5 * base * height
-        print("Find the area of a triangle if the base is {} and the height is {}.".format(base, height))
+        question = f"Imagine the area of a triangle if the base is {base} and the height is {height}: "
 
-    elif diff_ask == "hard":
-        radius = random.randint(1, 10)
+    # If the difficulty is "hard", output a circle question.
+    elif difficulty == "hard":
         area = 3.14 * radius ** 2
-        print("Find the area of a circle if the radius is {}, (PI is set as 3.14).".format(radius))
+        question = f"Find the area of a circle if the radius is {radius}, (PI is set as 3.14): "
 
-    user_answer = float(input("Your answer: (Enter xxx to exit) "))
-    if user_answer == area:
-        print("Correct! You calculated the area correctly.")
-        return "right"
-    else:
-        print("Incorrect. The correct answer is", area)
-        return "wrong"
+    return area, question
 
 
 # Main Function
-def play_game():
-
-    question_right = 0
+def main():
+    # Available Lists
+    yes_no_list_checker = {"yes", "no", "xxx"}
+    difficulty_checker = {"easy", "medium", "hard", "xxx"}
+    questions_played = 0
+    question_correct = 0
     question_wrong = 0
+    user_answer = ''
 
     print("====================================")
-    print("Welcome to the Area Calculator Game!")
+    print("Welcome to the Area Calculator Quiz!")
     print("====================================")
     print()
 
-    played_before = yes_no_checker("Would you like to see the instructions? ")
-
+    # Ask if the player wants to see the instructions
+    played_before = valid_checker("Would you like to see the instructions? ", yes_no_list_checker,
+                                  "Please type either yes or no ('xxx' to exit)")
     print()
     if played_before == "yes":
         instructions()
-    if played_before == "xxx":
-        print()
+    elif played_before == "xxx":
         print("You have chosen 'xxx'. Thank you for playing!")
-        return
-    formula_check = yes_no_checker("Would you like to see the formula list? ")
+        exit()
+
+    # Ask if the player wants to see the formula list
+    formula_check = valid_checker("Would you like to see the formula list? ", yes_no_list_checker,
+                                  "Please type a either yes or no ('xxx' to exit)")
     print()
     if formula_check == "yes":
-        print("The formula for finding the area of a SQUARE is: area = height * width")
-        print("The formula for finding the area of a TRIANGLE is: area = 0.5 * base * height")
-        print("The formula for finding the area of a CIRCLE is: area = PI * radius^2")
-        print("================================")
-        print("PI is set as *3.14* in this game")
-        print("================================")
-    if formula_check == "xxx":
+        display_formula_instructions()
+    elif formula_check == "xxx":
         print("You have chosen 'xxx'. Thank you for playing!")
-        return
-    diff_ask = difficulty_checker("Which difficulty would you like to play? ")
-    if diff_ask == "xxx":
-        print()
+        exit()
+
+    # Ask the player to choose the difficulty level
+    user_difficulty = valid_checker("Which difficulty would you like to play? ", difficulty_checker,
+                                    "Please type a valid difficulty (easy, medium, hard)")
+    print()
+    if user_difficulty == "xxx":
         print("You have chosen 'xxx'. Thank you for playing!")
-        return "exit"
+        exit()
+
+    print("-----------------------------------")
+    print(f"You have chosen the {user_difficulty} difficulty!")
     print("------------------------------------")
-    print("You have chosen the {} difficulty!".format(diff_ask))
-    print("------------------------------------")
-    question = question_gen(diff_ask)
-    question_played = 0
+    print()
+
+    # Ask the player how many questions they want to play
+    questions = input_checker('How many QUESTIONS would you like to play? <enter> for continuous mode: ')
+
+    if questions == 'xxx':
+        print('Thanks for playing! ')
+        exit()
+
     while True:
         print()
-        if question == "":
-            heading = "Continuous Mode: Question {}".format(question_played + 1)
+        if questions == "":
+            heading = f"Continuous Mode: QUESTION {questions_played + 1}"
         else:
-            heading = "!Question {} of {}!".format(question_played + 1, question)
+            heading = f"!QUESTION {questions_played + 1} of {questions}!"
         print(heading)
-        result = question_gen(diff_ask)
-        if result == "exit":
-            print()
-            print("#You have chosen 'xxx'. Thank you for playing!#")
+
+        area, math_question = question_gen(user_difficulty)
+
+        if isinstance(area, float):
+            user_answer = input_checker(math_question, True)
+        elif isinstance(area, int):
+            user_answer = input_checker(math_question, False)
+
+        if user_answer == "xxx" and questions_played == 0:
+            print("You have to play at least one QUESTION!")
+            continue
+
+        elif user_answer == "xxx":
+            print("\nYou have chosen to exit the Quiz. Thank you for playing!\n")
             break
-        if result == "right":
-            question_right += 1
+
+        if user_answer == area:
+            print("Correct! You calculated the area correctly!")
+            question_correct += 1
         else:
+            print("Incorrect. The correct answer is", area)
             question_wrong += 1
-        question_played += 1
-        if question_played == question:
+
+        questions_played += 1
+
+        if questions_played == questions:
             break
 
-    return question_right, question_wrong
+    return question_correct, question_wrong
 
 
-# Call the play_game() function and capture the returned values
-question_right, question_wrong = play_game()
+# Call the main() function and capture the returned values
+game_stats = main()
+stats_question_correct = 0
+stats_question_wrong = 0
 
-# Calculate Game Stats
-question_played = question_right + question_wrong
-percent_right = question_right / question_played * 100
-percent_wrong = question_wrong / question_played * 100
+# Check if the return value is "exit" (when 'xxx' is typed during instructions or difficulty selection)
+if game_stats == "exit":
+    print("Thank you for playing!")
+else:
+    stats_question_correct, stats_question_wrong = game_stats
 
-print()
+    # Calculate Game Stats
+    stats_question_played = stats_question_correct + stats_question_wrong
 
-# Displays game stats with % values to the nearest whole number
-print("===== Game Statistics =====")
-print("Questions Played: {}".format(question_played))
-print(f"Right: {question_right}, ({percent_right:.0f}%) \nLose: {question_wrong}, ({percent_wrong:.0f}%)")
+    if stats_question_played == 0:
+        percent_correct = 0.0
+        percent_wrong = 0.0
+    else:
+        percent_correct = stats_question_correct / stats_question_played * 100
+        percent_wrong = stats_question_wrong / stats_question_played * 100
+
+    # Displays game stats with % values to the nearest whole number
+    print("\n===== Game Statistics =====")
+    print(f"QUESTIONS Played: {stats_question_played}")
+    print(f"RIGHT!: {stats_question_correct}, ({percent_correct:.0f}%)")
+    print(f"WRONG...: {stats_question_wrong}, ({percent_wrong:.0f}%)")
